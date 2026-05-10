@@ -32,24 +32,26 @@ local function drag(frame)
     end)
 end
 
--- 🔑 1. CREAZIONE KEY SYSTEM (BEST HUB)
+-- 🔑 1. KEY SYSTEM (BEST HUB)
 local KeyGui = Instance.new("ScreenGui", game.CoreGui); KeyGui.Name = "BestHubKey"
 local KMain = Instance.new("Frame", KeyGui)
 KMain.Size = UDim2.new(0, 250, 0, 150); KMain.Position = UDim2.new(0.5, -125, 0.5, -75)
-KMain.BackgroundColor3 = Color3.fromRGB(25, 25, 25); drag(KMain); Instance.new("UICorner", KMain)
+KMain.BackgroundColor3 = Color3.fromRGB(20, 20, 20); drag(KMain); Instance.new("UICorner", KMain)
 
 local KTitle = Instance.new("TextLabel", KMain); KTitle.Text = "BEST HUB"; KTitle.Size = UDim2.new(1, 0, 0, 40); KTitle.TextColor3 = Color3.new(1,1,1); KTitle.Font = Enum.Font.GothamBold; KTitle.BackgroundTransparency = 1
-local KInput = Instance.new("TextBox", KMain); KInput.Size = UDim2.new(0, 200, 0, 30); KInput.Position = UDim2.new(0.1, 0, 0.45, 0); KInput.PlaceholderText = "Metti la Key (4)..."; KInput.Text = ""; KInput.BackgroundColor3 = Color3.fromRGB(40,40,40); KInput.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", KInput)
-local KBtn = Instance.new("TextButton", KMain); KBtn.Size = UDim2.new(0, 100, 0, 30); KBtn.Position = UDim2.new(0.3, 0, 0.75, 0); KBtn.Text = "ACCEDI"; KBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255); KBtn.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", KBtn)
+local KInput = Instance.new("TextBox", KMain)
+KInput.Size = UDim2.new(0, 200, 0, 35); KInput.Position = UDim2.new(0.1, 0, 0.4, 0)
+KInput.PlaceholderText = "idk1234"; KInput.Text = ""; KInput.BackgroundColor3 = Color3.fromRGB(35, 35, 35); KInput.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", KInput)
 
--- Variabili di stato globali
-local ghostActive = false
-local rebirthActive = false
-local upgradeActive = false
+local KBtn = Instance.new("TextButton", KMain)
+KBtn.Size = UDim2.new(0, 120, 0, 35); KBtn.Position = UDim2.new(0.25, 0, 0.72, 0); KBtn.Text = "LOGIN"; KBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255); KBtn.TextColor3 = Color3.new(1,1,1); KBtn.Font = Enum.Font.GothamBold; Instance.new("UICorner", KBtn)
 
--- 🛠 2. FUNZIONE PER FAR PARTIRE TUTTO IL HUB
+-- Variabili di stato
+local ghostActive, rebirthActive, upgradeActive = false, false, false
+
+-- 🛠 2. AVVIO HUB
 local function StartHub()
-    KeyGui:Destroy() -- Chiude la Key Tab
+    KeyGui:Destroy()
 
     -- --- TAB 1: GHOST ---
     local GhostGui = Instance.new("ScreenGui", game.CoreGui); GhostGui.Name = "FarmGhost"
@@ -76,20 +78,14 @@ local function StartHub()
     local TL = Instance.new("TextButton", TMain); TL.Text = "TL"; TL.Size = UDim2.new(0.8, 0, 0, 35); TL.Position = UDim2.new(0.1, 0, 0.75, 0); TL.BackgroundColor3 = Color3.fromRGB(0, 120, 255); TL.TextColor3 = Color3.new(1, 1, 1); Instance.new("UICorner", TL)
 
     local targetPos = nil
-    local points = {
-        {"Shop", Vector3.new(97.79, 1339.98, -75.49)},
-        {"Halloween 2021", Vector3.new(668.42, 1384.78, -262.89)},
-        {"Dark Shop", Vector3.new(-133.18, 1335.56, -8.83)},
-        {"Rebirth Shop", Vector3.new(-218.10, 1335.73, -6.62)},
-        {"Salon", Vector3.new(-184.90, 1339.98, 62.84)}
-    }
+    local points = {{"Shop", Vector3.new(97.79, 1339.98, -75.49)}, {"Halloween 2021", Vector3.new(668.42, 1384.78, -262.89)}, {"Dark Shop", Vector3.new(-133.18, 1335.56, -8.83)}, {"Rebirth Shop", Vector3.new(-218.10, 1335.73, -6.62)}, {"Salon", Vector3.new(-184.90, 1339.98, 62.84)}}
     for i, p in ipairs(points) do
         local b = Instance.new("TextButton", Scroll); b.Text = p[1]; b.Size = UDim2.new(1, 0, 0, 30); b.Position = UDim2.new(0, 0, 0, (i-1)*33); b.BackgroundColor3 = Color3.fromRGB(35, 35, 35); b.TextColor3 = Color3.new(1, 1, 1)
         b.MouseButton1Click:Connect(function() targetPos = p[2]; TL.Text = "TL TO " .. p[1] end)
     end
     TL.MouseButton1Click:Connect(function() if targetPos and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(targetPos) end end)
 
-    -- 🔄 3. LOOP UNIFICATO PER LE FUNZIONI
+    -- LOOP UNIFICATO
     task.spawn(function()
         while true do
             pcall(function()
@@ -102,9 +98,7 @@ local function StartHub()
                     ReplicatedStorage.Remotes.Punch:FireServer(unpack({Instance.new("Model", nil)}))
                 end
                 if upgradeActive then
-                    if LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                        LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(7730.49, 3273.26, -191270.30)
-                    end
+                    if LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(7730.49, 3273.26, -191270.30) end
                     VirtualUser:CaptureController(); VirtualUser:ClickButton1(Vector2.new(0,0))
                     ReplicatedStorage.Remotes.Upgrade:FireServer(); ReplicatedStorage.Remotes.Purchase:FireServer()
                 end
@@ -114,13 +108,13 @@ local function StartHub()
     end)
 end
 
--- 🔘 CONTROLLO BOTTONE KEY
+-- CONTROLLO KEY
 KBtn.MouseButton1Click:Connect(function()
     if KInput.Text == "4" then
         StartHub()
     else
-        KBtn.Text = "KEY ERRATA!"; KBtn.BackgroundColor3 = Color3.new(1, 0, 0)
+        KBtn.Text = "ERRATA!"; KBtn.BackgroundColor3 = Color3.new(1, 0, 0)
         task.wait(1)
-        KBtn.Text = "ACCEDI"; KBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+        KBtn.Text = "LOGIN"; KBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
     end
 end)
